@@ -26,7 +26,7 @@
 								}
 							}
 						},
-						"url": "https://lms-hackathon-api-april-2026-8b55b53c8fab.herokuapp.com/lms/login"
+						"url": "{{baseUrl}}/login"
 					},
 					"response": []
 				}
