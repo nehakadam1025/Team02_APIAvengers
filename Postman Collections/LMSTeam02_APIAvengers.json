@@ -1,0 +1,85 @@
+{
+	"info": {
+		"_postman_id": "8e87643f-b6ca-443d-ad77-553cf980cd42",
+		"name": "LMS Hackathon",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "New Request",
+					"id": "5f3b5466-fc2a-4a05-b293-178dc6c0a495",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"userLoginEmailId\": \"Team02@gmail.com\",\r\n\"password\": \"Team02@234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://lms-hackathon-api-april-2026-8b55b53c8fab.herokuapp.com/lms/login"
+					},
+					"response": []
+				}
+			],
+			"id": "652ebbb2-c4e8-4f27-98d0-90e6b31df2c0"
+		},
+		{
+			"name": "Program Module",
+			"item": [
+				{
+					"name": "New Request",
+					"id": "5c631786-cc0b-418d-9dc5-4dabb4dcda74",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"userLoginEmailId\": \"Team02@gmail.com\",\r\n\"password\": \"Team02@234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://lms-hackathon-api-april-2026-8b55b53c8fab.herokuapp.com/lms/login"
+					},
+					"response": []
+				}
+			],
+			"id": "8071c8b7-787b-4b3c-af32-964ef217b078"
+		},
+		{
+			"name": "ProgramBatch",
+			"item": [],
+			"id": "21dc2318-1d87-4cf3-8c8c-d121d58ef050"
+		},
+		{
+			"name": "Class Module",
+			"item": [],
+			"id": "b3b81aa5-ddca-4851-8ffa-91f113bf733f"
+		},
+		{
+			"name": "User Module",
+			"item": [],
+			"id": "cbc79b44-ceff-4b79-8330-960a0bb8fa1e"
+		},
+		{
+			"name": "User Login Controller",
+			"item": [],
+			"id": "6054bb88-3d16-47ab-841a-af13fdb1660b"
+		}
+	]
+}
