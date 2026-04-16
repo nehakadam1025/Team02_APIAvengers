@@ -80,6 +80,18 @@
 			"name": "User Login Controller",
 			"item": [],
 			"id": "6054bb88-3d16-47ab-841a-af13fdb1660b"
+		},
+		{
+			"name": "New Request",
+			"id": "638ca158-e51e-4261-9b0b-b9bcc12ad17d",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
 		}
 	]
 }
