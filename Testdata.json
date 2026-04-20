@@ -1,0 +1,168 @@
+[
+  {
+    "testCaseId": "L_POST_Login_TC_01",
+    "scenarioName": "Login with valid credentials",
+    "scenarioType": "Positive",
+    "Operation": "PostLogin",
+    "endPoint": "login",
+    "userLoginEmailId": "Team02@gmail.com",
+    "password": "Team02@234",
+    "expectedStatusCode": 200,
+    "expectedstatusline": "OK"
+  },
+  {
+    "testCaseId": "L_POST_ConfirmEmailPassword_TC_01",
+    "scenarioName": "ConfirmEmailPassword with valid credentials",
+    "scenarioType": "Positive",
+    "Operation": "PostConfirmEmailPassword",
+    "endPoint": "login/forgotpassword/confirmEmail",
+    "userLoginEmailId": "Team02@gmail.com",
+    "expectedStatusCode": 201,
+    "expectedstatusline": "Created"
+  },
+  {
+    "testCaseId": "L_POST_ConfirmEmailPassword_TC_02",
+    "scenarioName": "ConfirmEmailPassword with empty email",
+    "scenarioType": "Negative",
+    "Operation": "PostConfirmEmptyEmail",
+    "endPoint": "login/forgotpassword/confirmEmail",
+    "userLoginEmailId": "",
+    "expectedStatusCode": 400,
+    "expectedstatusline": "Bad Request"
+  },
+  {
+    "testCaseId": "L_POST_ConfirmEmailPassword_TC_03",
+    "scenarioName": "ConfirmEmailPassword wrong endpoint",
+    "scenarioType": "Negative",
+    "Operation": "PostConfirmwrongendpoint",
+    "endPoint": "login/forgotpassword/confirmEmailwrong",
+    "userLoginEmailId": "Team02@gmail.com",
+    "expectedStatusCode": 404,
+    "expectedstatusline": "Not Found"
+  },
+  {
+    "testCaseId": "L_POST_ConfirmEmailPassword_TC_04",
+    "scenarioName": "ConfirmEmailPassword with wrong content type",
+    "scenarioType": "Negative",
+    "Operation": "PostConfirmwrongcontenttype",
+    "endPoint": "login/forgotpassword/confirmEmail",
+    "userLoginEmailId": "Team02@gmail.com",
+    "expectedStatusCode": 415,
+    "expectedstatusline": "Unsupported Media Type"
+  },
+  {
+    "testCaseId": "L_POST_ResetPassword_TC_01",
+    "scenarioName": "ResetPassword with valid credentials",
+    "scenarioType": "Positive",
+    "Operation": "PostResetPassword",
+    "endPoint": "resetPassword",
+    "userLoginEmailId": "Team02@gmail.com",
+    "password": "Team02@234",
+    "expectedStatusCode": 200,
+    "expectedstatusline": "OK"
+  },
+  {
+    "testCaseId": "L_POST_Login_TC_02",
+    "scenarioName": "Login with valid credentials after ResetPassword",
+    "scenarioType": "Positive",
+    "Operation": "PostLoginReset",
+    "endPoint": "login",
+    "userLoginEmailId": "Team02@gmail.com",
+    "password": "Team02@234",
+    "expectedStatusCode": 200,
+    "expectedstatusline": "OK"
+  },
+  {
+    "testCaseId": "L_POST_Login_TC_02",
+    "scenarioName": "Login with no email",
+    "scenarioType": "Negative",
+    "Operation": "PostLoginNoemail",
+    "endPoint": "login",
+    "userLoginEmailId": "",
+    "password": "Team02@234",
+    "expectedStatusCode": 400,
+    "expectedstatusline": "Bad Request"
+  },
+  {
+    "testCaseId": "L_POST_Login_TC_03",
+    "scenarioName": "Login with no password",
+    "scenarioType": "Negative",
+    "Operation": "PostLoginNopassword",
+    "endPoint": "login",
+    "userLoginEmailId": "Team02@gmail.com",
+    "password": "",
+    "expectedStatusCode": 400,
+    "expectedstatusline": "Bad Request"
+  },
+  {
+    "testCaseId": "L_POST_Login_TC_04",
+    "scenarioName": "Login with no email and password",
+    "scenarioType": "Negative",
+    "Operation": "PostLoginNoemailpassword",
+    "endPoint": "login",
+    "userLoginEmailId": "",
+    "password": "",
+    "expectedStatusCode": 400,
+    "expectedstatusline": "Bad Request"
+  },
+  {
+    "testCaseId": "L_POST_Login_TC_05",
+    "scenarioName": "Login with invalid email",
+    "scenarioType": "Negative",
+    "Operation": "PostLoginInvaliemail",
+    "endPoint": "login",
+    "userLoginEmailId": "Team02",
+    "password": "Team02@234",
+    "expectedStatusCode": 400,
+    "expectedstatusline": "Bad Request"
+  },
+  {
+    "testCaseId": "L_POST_Login_TC_06",
+    "scenarioName": "Login with wrong endpoint",
+    "scenarioType": "Negative",
+    "Operation": "PostLoginwrongendpoint",
+    "endPoint": "loginwrong",
+    "userLoginEmailId": "Team02@gmail.com",
+    "password": "Team02@234",
+    "expectedStatusCode": 404,
+    "expectedstatusline": "Not Found"
+  },
+  {
+    "testCaseId": "L_POST_Login_TC_07",
+    "scenarioName": "Login with wrong content type",
+    "scenarioType": "Negative",
+    "Operation": "PostLoginwrongcontenttype",
+    "endPoint": "login",
+    "userLoginEmailId": "Team02@gmail.com",
+    "password": "Team02@234",
+    "expectedStatusCode": 415,
+    "expectedstatusline": "Unsupported Media Type"
+  },
+  {
+    "testCaseId": "L_GET_Logoutlms_TC_01",
+    "scenarioName": "Logout application with invalid endpoint",
+    "scenarioType": "Negative",
+    "Operation": "Getlogoutlmsw",
+    "endPoint": "logoutwrong",
+    "expectedStatusCode": 404,
+    "expectedstatusline": "Not Found"
+  },
+  {
+    "testCaseId": "L_GET_Logoutlms_TC_02",
+    "scenarioName": "Logout application with no token",
+    "scenarioType": "Negative",
+    "Operation": "GetlogoutlmsNotoken",
+    "endPoint": "logoutlms",
+    "expectedStatusCode": 401,
+    "expectedstatusline": "Unauthorized"
+  },
+  {
+    "testCaseId": "L_GET_Logoutlms_TC_03",
+    "scenarioName": "Logout application with valid token",
+    "scenarioType": "Positive",
+    "Operation": "Getlogoutlms",
+    "endPoint": "logoutlms",
+    "expectedStatusCode": 200,
+    "expectedstatusline": "OK"
+  }  
+]
