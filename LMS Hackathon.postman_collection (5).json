@@ -1,0 +1,3026 @@
+{
+  "info": {
+    "_postman_id": "291ac4c3-6cd7-4586-99ed-c3df635d13d1",
+    "name": "LMS Hackathon",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "54059872"
+  },
+  "item": [
+    {
+      "name": "Login",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const testData = pm.iterationData.toObject();\r",
+                  "\r",
+                  "\r",
+                  "let response = {};\r",
+                  "let isJson = true;\r",
+                  "\r",
+                  "try {\r",
+                  "    response = pm.response.json();\r",
+                  "} catch (e) {\r",
+                  "    isJson = false;\r",
+                  "    console.log(\"Response is not JSON\");\r",
+                  "}\r",
+                  "\r",
+                  "\r",
+                  "console.log('--- Test Result Info ---');\r",
+                  "console.log('Scenario Name :', testData.scenarioName);\r",
+                  "console.log('Scenario Type :',testData.scenarioType);\r",
+                  "console.log('Request Operation  :', testData.Operation);\r",
+                  "console.log('Test Case ID  :', testData.testCaseId);\r",
+                  "console.log('HTTP Status   :', pm.response.code);\r",
+                  "console.log('------------------------');\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  "pm.test('Status Code Validation | ' + testData.testCaseId, function () {\r",
+                  "    pm.expect(pm.response.code).to.eql(Number(testData.expectedStatusCode));\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "if (testData.expectedstatusline) {\r",
+                  "    pm.test('Status Line Validation | ' + testData.testCaseId, function () {\r",
+                  "        pm.expect(pm.response.status).to.eql(testData.expectedstatusline);\r",
+                  "    });\r",
+                  "}\r",
+                  "\r",
+                  "\r",
+                  "if ([200, 201].includes(pm.response.code) && isJson) {\r",
+                  "\r",
+                  "   \r",
+                  "    pm.test('Token Must Exist | ' + testData.testCaseId, function () {\r",
+                  "        pm.expect(response).to.have.property('token');\r",
+                  "    });\r",
+                  "\r",
+                  "    \r",
+                  "    if (response.token) {\r",
+                  "        pm.environment.set('token', response.token);\r",
+                  "        pm.environment.set('tokenType', response.type || 'Bearer');\r",
+                  "    }\r",
+                  "\r",
+                  "    \r",
+                  "    const positiveSchema = {\r",
+                  "        type: 'object',\r",
+                  "        required: ['token', 'type', 'userId', 'email', 'roles', 'status', 'passwordExpired'],\r",
+                  "        properties: {\r",
+                  "            token: { type: 'string' },\r",
+                  "            type: { type: 'string' },\r",
+                  "            userId: { type: 'string' },\r",
+                  "            email: { type: 'string' },\r",
+                  "            roles: {\r",
+                  "                type: 'array',\r",
+                  "                items: { type: 'string' }\r",
+                  "            },\r",
+                  "            status: { type: 'string' },\r",
+                  "            passwordExpired: { type: 'boolean' }\r",
+                  "        }\r",
+                  "    };\r",
+                  "\r",
+                  "    pm.test('Schema Validation | ' + testData.testCaseId, function () {\r",
+                  "        pm.response.to.have.jsonSchema(positiveSchema);\r",
+                  "    });\r",
+                  "\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "let testData = pm.iterationData.toObject();\r",
+                  "\r",
+                  "if (testData.Operation !== 'PostLogin') {\r",
+                  "    pm.execution.skipRequest();\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"userLoginEmailId\": \"{{userLoginEmailId}}\",\r\n\"password\": \"{{password}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/{{endPoint}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "{{endPoint}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "auth": {
+        "type": "jwt",
+        "jwt": [
+          {
+            "key": "algorithm",
+            "value": "HS256",
+            "type": "string"
+          },
+          {
+            "key": "isSecretBase64Encoded",
+            "value": false,
+            "type": "boolean"
+          },
+          {
+            "key": "payload",
+            "value": "{}",
+            "type": "string"
+          },
+          {
+            "key": "addTokenTo",
+            "value": "header",
+            "type": "string"
+          },
+          {
+            "key": "headerPrefix",
+            "value": "Bearer",
+            "type": "string"
+          },
+          {
+            "key": "queryParamKey",
+            "value": "token",
+            "type": "string"
+          },
+          {
+            "key": "header",
+            "value": "{}",
+            "type": "string"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "ProgramBatch",
+      "item": [
+        {
+          "name": "Negatives",
+          "item": [
+            {
+              "name": "Missing Batch name",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "let jsonData = pm.response.json();\r",
+                      "\r",
+                      "\r",
+                      "let batchid = jsonData.batchId;\r",
+                      "\r",
+                      "// Store batchid in environment variable\r",
+                      "pm.environment.set(\"batchId\", batchid);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJUZWFtMDJAZ21haWwuY29tIiwiaWF0IjoxNzc2NzI1NTMyLCJleHAiOjE3NzY3NTQzMzJ9.MoR3SYM6CPT1t5tlRDMjVNmgUf35RCPtCPE46nyolJH8WbSPv8TlIDQ393nIvG0FuBdfEPZW-mHjffT9i4It7g",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n\"batchDescription\": \"First Batch\",\r\n\"batchNoOfClasses\": 2,\r\n\"batchStatus\": \"Active\",\r\n\"programId\":166,\r\n\"programName\": \"My second test\"\r\n}\r\n\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://lms-hackathon-api-april-2026-8b55b53c8fab.herokuapp.com/lms/batches",
+                  "protocol": "https",
+                  "host": [
+                    "lms-hackathon-api-april-2026-8b55b53c8fab",
+                    "herokuapp",
+                    "com"
+                  ],
+                  "path": [
+                    "lms",
+                    "batches"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Empty Batch name",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "let jsonData = pm.response.json();\r",
+                      "\r",
+                      "\r",
+                      "let batchid = jsonData.batchId;\r",
+                      "\r",
+                      "// Store batchid in environment variable\r",
+                      "pm.environment.set(\"batchId\", batchid);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJUZWFtMDJAZ21haWwuY29tIiwiaWF0IjoxNzc2NzI1NTMyLCJleHAiOjE3NzY3NTQzMzJ9.MoR3SYM6CPT1t5tlRDMjVNmgUf35RCPtCPE46nyolJH8WbSPv8TlIDQ393nIvG0FuBdfEPZW-mHjffT9i4It7g",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n\"batchDescription\": \"First Batch\",\r\n\"batchName\": \"\",\r\n\"batchNoOfClasses\": 2,\r\n\"batchStatus\": \"Active\",\r\n\"programId\":166,\r\n\"programName\": \"My second test\"\r\n}\r\n\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://lms-hackathon-api-april-2026-8b55b53c8fab.herokuapp.com/lms/batches",
+                  "protocol": "https",
+                  "host": [
+                    "lms-hackathon-api-april-2026-8b55b53c8fab",
+                    "herokuapp",
+                    "com"
+                  ],
+                  "path": [
+                    "lms",
+                    "batches"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Without Bearer token",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "// Parse the response\r",
+                      "const response = pm.response.json();\r",
+                      "\r",
+                      "// ✅ 1. Status Code Check\r",
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "// ✅ 2. Verify we received an Array (List)\r",
+                      "pm.test(\"Response is a list of batches\", function () {\r",
+                      "    pm.expect(response).to.be.an('array');\r",
+                      "});\r",
+                      "\r",
+                      "// ✅ 3. Check if the list is not empty (optional)\r",
+                      "pm.test(\"Batches are returned in the list\", function () {\r",
+                      "    pm.expect(response.length).to.be.at.least(1);\r",
+                      "});\r",
+                      "\r",
+                      "// ✅ 4. Validate the structure of the first batch in the list\r",
+                      "if (response.length > 0) {\r",
+                      "    pm.test(\"First batch has correct fields\", function () {\r",
+                      "        pm.expect(response[0]).to.have.property('batchId');\r",
+                      "        pm.expect(response[0]).to.have.property('batchName');\r",
+                      "        pm.expect(response[0]).to.have.property('programId');\r",
+                      "    });\r",
+                      "    \r",
+                      "    // Logic: Save the first Batch ID to your environment automatically\r",
+                      "    // This is helpful for chaining to the next \"Get Batch By ID\" request\r",
+                      "    pm.environment.set(\"tempBatchId\", response[0].batchId);\r",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{Token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/batches",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "batches"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Program Batch Module",
+          "item": [
+            {
+              "name": "Create Program Batch",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "let jsonData = pm.response.json();\r",
+                      "\r",
+                      "\r",
+                      "let batchid = jsonData.batchId;\r",
+                      "\r",
+                      "// Store batchid in environment variable\r",
+                      "pm.environment.set(\"batchId\", batchid);"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJUZWFtMDJAZ21haWwuY29tIiwiaWF0IjoxNzc2NjQ1MzE2LCJleHAiOjE3NzY2NzQxMTZ9.Qn6879_Tc2TJ5gFeaFmKJjAt9VTc_VQAxs4CLFtXiLuJoiB31GluKBy4qbBrYt3Yq7RNWvpaXKqpovlssZA2Yg",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n\"batchDescription\": \"First Batch\",\r\n\"batchName\": \"My second test_12\",\r\n\"batchNoOfClasses\": 2,\r\n\"batchStatus\": \"Active\",\r\n\"programId\":166,\r\n\"programName\": \"My second test\"\r\n}\r\n\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://lms-hackathon-api-april-2026-8b55b53c8fab.herokuapp.com/lms/batches",
+                  "protocol": "https",
+                  "host": [
+                    "lms-hackathon-api-april-2026-8b55b53c8fab",
+                    "herokuapp",
+                    "com"
+                  ],
+                  "path": [
+                    "lms",
+                    "batches"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "List all batches",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "// Parse the response\r",
+                      "const response = pm.response.json();\r",
+                      "\r",
+                      "// ✅ 1. Status Code Check\r",
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "// ✅ 2. Verify we received an Array (List)\r",
+                      "pm.test(\"Response is a list of batches\", function () {\r",
+                      "    pm.expect(response).to.be.an('array');\r",
+                      "});\r",
+                      "\r",
+                      "// ✅ 3. Check if the list is not empty (optional)\r",
+                      "pm.test(\"Batches are returned in the list\", function () {\r",
+                      "    pm.expect(response.length).to.be.at.least(1);\r",
+                      "});\r",
+                      "\r",
+                      "// ✅ 4. Validate the structure of the first batch in the list\r",
+                      "if (response.length > 0) {\r",
+                      "    pm.test(\"First batch has correct fields\", function () {\r",
+                      "        pm.expect(response[0]).to.have.property('batchId');\r",
+                      "        pm.expect(response[0]).to.have.property('batchName');\r",
+                      "        pm.expect(response[0]).to.have.property('programId');\r",
+                      "    });\r",
+                      "    \r",
+                      "    // Logic: Save the first Batch ID to your environment automatically\r",
+                      "    // This is helpful for chaining to the next \"Get Batch By ID\" request\r",
+                      "    pm.environment.set(\"tempBatchId\", response[0].batchId);\r",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJUZWFtMDJAZ21haWwuY29tIiwiaWF0IjoxNzc2NjQ1MzE2LCJleHAiOjE3NzY2NzQxMTZ9.Qn6879_Tc2TJ5gFeaFmKJjAt9VTc_VQAxs4CLFtXiLuJoiB31GluKBy4qbBrYt3Yq7RNWvpaXKqpovlssZA2Yg",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{Token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/batches",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "batches"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "By Batch Id",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Confirm correct Batch ID\", function () {\r",
+                      "    let response = pm.response.json();\r",
+                      "    pm.expect(response.batchId).to.eql(Number(pm.environment.get(\"batchId\")));\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJUZWFtMDJAZ21haWwuY29tIiwiaWF0IjoxNzc2NjQ1MzE2LCJleHAiOjE3NzY2NzQxMTZ9.Qn6879_Tc2TJ5gFeaFmKJjAt9VTc_VQAxs4CLFtXiLuJoiB31GluKBy4qbBrYt3Yq7RNWvpaXKqpovlssZA2Yg",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/batches/batchId/{{batchId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "batches",
+                    "batchId",
+                    "{{batchId}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "By Program Id",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Confirm correct Batch ID\", function () {\r",
+                      "    let response = pm.response.json();\r",
+                      "    pm.expect(response.batchId).to.eql(Number(pm.environment.get(\"batchId\")));\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJUZWFtMDJAZ21haWwuY29tIiwiaWF0IjoxNzc2NjQ1MzE2LCJleHAiOjE3NzY2NzQxMTZ9.Qn6879_Tc2TJ5gFeaFmKJjAt9VTc_VQAxs4CLFtXiLuJoiB31GluKBy4qbBrYt3Yq7RNWvpaXKqpovlssZA2Yg",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/batches/program/{{programId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "batches",
+                    "program",
+                    "{{programId}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "By Batch Name",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Confirm correct Batch ID\", function () {\r",
+                      "    let response = pm.response.json();\r",
+                      "    pm.expect(response.batchId).to.eql(Number(pm.environment.get(\"batchId\")));\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJUZWFtMDJAZ21haWwuY29tIiwiaWF0IjoxNzc2NjQ1MzE2LCJleHAiOjE3NzY2NzQxMTZ9.Qn6879_Tc2TJ5gFeaFmKJjAt9VTc_VQAxs4CLFtXiLuJoiB31GluKBy4qbBrYt3Yq7RNWvpaXKqpovlssZA2Yg",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/batchName/{{batchName}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "batchName",
+                    "{{batchName}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Batch Details",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJUZWFtMDJAZ21haWwuY29tIiwiaWF0IjoxNzc2NjQ1MzE2LCJleHAiOjE3NzY2NzQxMTZ9.Qn6879_Tc2TJ5gFeaFmKJjAt9VTc_VQAxs4CLFtXiLuJoiB31GluKBy4qbBrYt3Yq7RNWvpaXKqpovlssZA2Yg",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"batchDescription\": \"{{batchDes}}\",\n  \"batchName\": \"{{batchName}}\",\n  \"batchNoOfClasses\": 2,\n  \"batchStatus\": \"{{batchStatus}}\",\n  \"programId\": \"{{targetPgmId}}\",\n  \"programName\": \"My second test\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/batches/{{batchId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "batches",
+                    "{{batchId}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "New Request",
+              "request": {
+                "method": "GET",
+                "header": []
+              },
+              "response": []
+            },
+            {
+              "name": "New Request",
+              "request": {
+                "method": "GET",
+                "header": []
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Create Program Batch",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "let jsonData = pm.response.json();\r",
+                  "\r",
+                  "\r",
+                  "let batchid = jsonData.batchId;\r",
+                  "\r",
+                  "// Store batchid in environment variable\r",
+                  "pm.environment.set(\"batchId\", batchid);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJUZWFtMDJAZ21haWwuY29tIiwiaWF0IjoxNzc2NzI1NTMyLCJleHAiOjE3NzY3NTQzMzJ9.MoR3SYM6CPT1t5tlRDMjVNmgUf35RCPtCPE46nyolJH8WbSPv8TlIDQ393nIvG0FuBdfEPZW-mHjffT9i4It7g",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"batchDescription\": \"First Batch\",\r\n\"batchName\": \"My second test_14\",\r\n\"batchNoOfClasses\": 2,\r\n\"batchStatus\": \"Active\",\r\n\"programId\":166,\r\n\"programName\": \"My second test\"\r\n}\r\n\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://lms-hackathon-api-april-2026-8b55b53c8fab.herokuapp.com/lms/batches",
+              "protocol": "https",
+              "host": [
+                "lms-hackathon-api-april-2026-8b55b53c8fab",
+                "herokuapp",
+                "com"
+              ],
+              "path": [
+                "lms",
+                "batches"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List all batches",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Parse the response\r",
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "// ✅ 1. Status Code Check\r",
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "// ✅ 2. Verify we received an Array (List)\r",
+                  "pm.test(\"Response is a list of batches\", function () {\r",
+                  "    pm.expect(response).to.be.an('array');\r",
+                  "});\r",
+                  "\r",
+                  "// ✅ 3. Check if the list is not empty (optional)\r",
+                  "pm.test(\"Batches are returned in the list\", function () {\r",
+                  "    pm.expect(response.length).to.be.at.least(1);\r",
+                  "});\r",
+                  "\r",
+                  "// ✅ 4. Validate the structure of the first batch in the list\r",
+                  "if (response.length > 0) {\r",
+                  "    pm.test(\"First batch has correct fields\", function () {\r",
+                  "        pm.expect(response[0]).to.have.property('batchId');\r",
+                  "        pm.expect(response[0]).to.have.property('batchName');\r",
+                  "        pm.expect(response[0]).to.have.property('programId');\r",
+                  "    });\r",
+                  "    \r",
+                  "    // Logic: Save the first Batch ID to your environment automatically\r",
+                  "    // This is helpful for chaining to the next \"Get Batch By ID\" request\r",
+                  "    pm.environment.set(\"tempBatchId\", response[0].batchId);\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJUZWFtMDJAZ21haWwuY29tIiwiaWF0IjoxNzc2NzI1NTMyLCJleHAiOjE3NzY3NTQzMzJ9.MoR3SYM6CPT1t5tlRDMjVNmgUf35RCPtCPE46nyolJH8WbSPv8TlIDQ393nIvG0FuBdfEPZW-mHjffT9i4It7g",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{Token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/batches",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "batches"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "By Batch Id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Confirm correct Batch ID\", function () {\r",
+                  "    let response = pm.response.json();\r",
+                  "    pm.expect(response.batchId).to.eql(Number(pm.environment.get(\"batchId\")));\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJUZWFtMDJAZ21haWwuY29tIiwiaWF0IjoxNzc2NjQ1MzE2LCJleHAiOjE3NzY2NzQxMTZ9.Qn6879_Tc2TJ5gFeaFmKJjAt9VTc_VQAxs4CLFtXiLuJoiB31GluKBy4qbBrYt3Yq7RNWvpaXKqpovlssZA2Yg",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/batches/batchId/{{batchId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "batches",
+                "batchId",
+                "{{batchId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "By Program Id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Confirm correct Batch ID\", function () {\r",
+                  "    let response = pm.response.json();\r",
+                  "    pm.expect(response.batchId).to.eql(Number(pm.environment.get(\"batchId\")));\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJUZWFtMDJAZ21haWwuY29tIiwiaWF0IjoxNzc2NjQ1MzE2LCJleHAiOjE3NzY2NzQxMTZ9.Qn6879_Tc2TJ5gFeaFmKJjAt9VTc_VQAxs4CLFtXiLuJoiB31GluKBy4qbBrYt3Yq7RNWvpaXKqpovlssZA2Yg",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/batches/program/{{programId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "batches",
+                "program",
+                "{{programId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "By Batch Name",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Confirm correct Batch ID\", function () {\r",
+                  "    let response = pm.response.json();\r",
+                  "    pm.expect(response.batchId).to.eql(Number(pm.environment.get(\"batchId\")));\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJUZWFtMDJAZ21haWwuY29tIiwiaWF0IjoxNzc2NjQ1MzE2LCJleHAiOjE3NzY2NzQxMTZ9.Qn6879_Tc2TJ5gFeaFmKJjAt9VTc_VQAxs4CLFtXiLuJoiB31GluKBy4qbBrYt3Yq7RNWvpaXKqpovlssZA2Yg",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/batchName/{{batchName}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "batchName",
+                "{{batchName}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Batch Details",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJUZWFtMDJAZ21haWwuY29tIiwiaWF0IjoxNzc2NjQ1MzE2LCJleHAiOjE3NzY2NzQxMTZ9.Qn6879_Tc2TJ5gFeaFmKJjAt9VTc_VQAxs4CLFtXiLuJoiB31GluKBy4qbBrYt3Yq7RNWvpaXKqpovlssZA2Yg",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"batchDescription\": \"{{batchDes}}\",\n  \"batchName\": \"{{batchName}}\",\n  \"batchNoOfClasses\": 2,\n  \"batchStatus\": \"{{batchStatus}}\",\n  \"programId\": \"{{targetPgmId}}\",\n  \"programName\": \"My second test\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/batches/{{batchId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "batches",
+                "{{batchId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "By Batch Id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJUZWFtMDJAZ21haWwuY29tIiwiaWF0IjoxNzc2NjQ1MzE2LCJleHAiOjE3NzY2NzQxMTZ9.Qn6879_Tc2TJ5gFeaFmKJjAt9VTc_VQAxs4CLFtXiLuJoiB31GluKBy4qbBrYt3Yq7RNWvpaXKqpovlssZA2Yg",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"batchDescription\": \"{{batchDes}}\",\n  \"batchName\": \"{{batchName}}\",\n  \"batchNoOfClasses\": 2,\n  \"batchStatus\": \"{{batchStatus}}\",\n  \"programId\": \"{{targetPgmId}}\",\n  \"programName\": \"My second test\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/batches/{{batchId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "batches",
+                "{{batchId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User Login Controller",
+      "item": [
+        {
+          "name": "Forgot Password",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const testData = pm.iterationData.toObject();\r",
+                  "\r",
+                  "\r",
+                  "let response = {};\r",
+                  "let isJson = true;\r",
+                  "\r",
+                  "try {\r",
+                  "    response = pm.response.json();\r",
+                  "} catch (e) {\r",
+                  "    isJson = false;\r",
+                  "    console.log(\"Response is not JSON\");\r",
+                  "}\r",
+                  "\r",
+                  "console.log('--- Test Result Info ---');\r",
+                  "console.log('Scenario Name :', testData.scenarioName);\r",
+                  "console.log('Scenario Type :', testData.scenarioType);\r",
+                  "console.log('Request Operation :', testData.Operation);\r",
+                  "console.log('Test Case ID :', testData.testCaseId);\r",
+                  "console.log('HTTP Status :', pm.response.code);\r",
+                  "console.log('------------------------');\r",
+                  "\r",
+                  "\r",
+                  "pm.test('Status Code Validation | ' + testData.testCaseId, function () {\r",
+                  "    pm.expect(pm.response.code).to.eql(Number(testData.expectedStatusCode));\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "if (testData.expectedstatusline) {\r",
+                  "    pm.test('Status Line Validation | ' + testData.testCaseId, function () {\r",
+                  "        pm.expect(pm.response.status).to.eql(testData.expectedstatusline);\r",
+                  "    });\r",
+                  "}\r",
+                  "\r",
+                  "\r",
+                  "if ([200, 201].includes(pm.response.code) && isJson) {\r",
+                  "\r",
+                  "    \r",
+                  "    pm.test('Token Must Exist | ' + testData.testCaseId, function () {\r",
+                  "        pm.expect(response).to.have.property('token');\r",
+                  "    });\r",
+                  "\r",
+                  "    \r",
+                  "    if (response.token) {\r",
+                  "        pm.environment.set('ConfirmEmailtoken', response.token);\r",
+                  "    }\r",
+                  "\r",
+                  "    \r",
+                  "    if (response.type) {\r",
+                  "        pm.environment.set('ConfirmEmailType', response.type);\r",
+                  "    }\r",
+                  "\r",
+                  "    \r",
+                  "    const confirmEmailSchema = {\r",
+                  "        type: 'object',\r",
+                  "        required: ['token'],\r",
+                  "        properties: {\r",
+                  "            token: { type: 'string' },\r",
+                  "            type: { type: 'string' }\r",
+                  "        }\r",
+                  "    };\r",
+                  "\r",
+                  "    pm.test('Schema Validation | ' + testData.testCaseId, function () {\r",
+                  "        pm.response.to.have.jsonSchema(confirmEmailSchema);\r",
+                  "    });\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "let testData = pm.iterationData.toObject();\r",
+                  "\r",
+                  "if (testData.Operation !== 'PostConfirmEmailPassword') {\r",
+                  "    pm.execution.skipRequest();\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"userLoginEmailId\": \"{{userLoginEmailId}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/{{endPoint}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "{{endPoint}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Forgot Password empty email",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const testData = pm.iterationData.toObject();\r",
+                  "\r",
+                  "\r",
+                  "let response = {};\r",
+                  "let isJson = true;\r",
+                  "\r",
+                  "try {\r",
+                  "    response = pm.response.json();\r",
+                  "} catch (e) {\r",
+                  "    isJson = false;\r",
+                  "    console.log(\"Response is not JSON\");\r",
+                  "}\r",
+                  "\r",
+                  "\r",
+                  "console.log('--- Test Result Info ---');\r",
+                  "console.log('Scenario Name :', testData.scenarioName);\r",
+                  "console.log('Scenario Type :', testData.scenarioType);\r",
+                  "console.log('Request Operation :', testData.Operation);\r",
+                  "console.log('Test Case ID :', testData.testCaseId);\r",
+                  "console.log('HTTP Status :', pm.response.code);\r",
+                  "console.log('FULL RESPONSE :', response);\r",
+                  "console.log('------------------------');\r",
+                  "\r",
+                  "\r",
+                  "pm.test('Status Code Validation | ' + testData.testCaseId, function () {\r",
+                  "    pm.expect(pm.response.code).to.eql(Number(testData.expectedStatusCode));\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "if (testData.expectedstatusline) {\r",
+                  "    pm.test('Status Line Validation | ' + testData.testCaseId, function () {\r",
+                  "        pm.expect(pm.response.status).to.eql(testData.expectedstatusline);\r",
+                  "    });\r",
+                  "}\r",
+                  "\r",
+                  "\r",
+                  "if ([400, 404].includes(pm.response.code) && isJson) {\r",
+                  "\r",
+                  "    \r",
+                  "    pm.test('Error response should exist', function () {\r",
+                  "        pm.expect(response).to.be.an('object');\r",
+                  "    });\r",
+                  "\r",
+                  "    \r",
+                  "    let errorMsg = response.message || \r",
+                  "                   response.error || \r",
+                  "                   response.userLoginEmailId;\r",
+                  "\r",
+                  "    pm.test('Error message should exist', function () {\r",
+                  "        pm.expect(errorMsg).to.not.be.undefined;\r",
+                  "    });\r",
+                  "\r",
+                  "    pm.test('Error message should not be empty', function () {\r",
+                  "        pm.expect(errorMsg).to.not.be.empty;\r",
+                  "    });\r",
+                  "\r",
+                  "    \r",
+                  "    pm.test('Error message should indicate invalid email', function () {\r",
+                  "        pm.expect(errorMsg.toLowerCase())\r",
+                  "          .to.satisfy(msg =>\r",
+                  "              msg.includes('invalid') ||\r",
+                  "              msg.includes('not found') ||\r",
+                  "              msg.includes('exist') ||\r",
+                  "              msg.includes('email')\r",
+                  "          );\r",
+                  "    });\r",
+                  "\r",
+                  "    \r",
+                  "    const negativeSchema = {\r",
+                  "        type: 'object',\r",
+                  "        additionalProperties: { type: 'string' }\r",
+                  "    };\r",
+                  "\r",
+                  "    pm.test('Negative Schema Validation | ' + testData.testCaseId, function () {\r",
+                  "        pm.response.to.have.jsonSchema(negativeSchema);\r",
+                  "    });\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "let testData = pm.iterationData.toObject();\r",
+                  "\r",
+                  "if (testData.Operation !== 'PostConfirmEmptyEmail') {\r",
+                  "    pm.execution.skipRequest();\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"userLoginEmailId\": \"{{userLoginEmailId}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/{{endPoint}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "{{endPoint}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Forgot Password wrong endpoint",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const testData = pm.iterationData.toObject();\r",
+                  "\r",
+                  "\r",
+                  "let responseText = pm.response.text().trim().toLowerCase();\r",
+                  "\r",
+                  "console.log(\"Response:\", responseText);\r",
+                  "\r",
+                  "\r",
+                  "pm.test('Status Code | ' + testData.testCaseId, function () {\r",
+                  "    pm.expect(pm.response.code).to.eql(Number(testData.expectedStatusCode));\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "if (testData.expectedstatusline) {\r",
+                  "    pm.test('Status Line | ' + testData.testCaseId, function () {\r",
+                  "        pm.expect(pm.response.status).to.eql(testData.expectedstatusline);\r",
+                  "    });\r",
+                  "}\r",
+                  "\r",
+                  "\r",
+                  "if (testData.scenarioType === \"Negative\") {\r",
+                  "\r",
+                  "   \r",
+                  "    pm.test('Response should indicate invalid endpoint', function () {\r",
+                  "        pm.expect(responseText)\r",
+                  "          .to.include('invalid');\r",
+                  "    });\r",
+                  "\r",
+                  "   \r",
+                  "    pm.test('Error message validation', function () {\r",
+                  "        pm.expect(responseText)\r",
+                  "          .to.satisfy(msg =>\r",
+                  "              msg.includes('invalid') ||\r",
+                  "              msg.includes('not found') ||\r",
+                  "              msg.includes('error')\r",
+                  "          );\r",
+                  "    });\r",
+                  "\r",
+                  "  \r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "let testData = pm.iterationData.toObject();\r",
+                  "\r",
+                  "if (testData.Operation !== 'PostConfirmwrongendpoint') {\r",
+                  "    pm.execution.skipRequest();\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"userLoginEmailId\": \"{{userLoginEmailId}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/{{endPoint}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "{{endPoint}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Forgot Password wrong content type",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const testData = pm.iterationData.toObject();\r",
+                  "\r",
+                  "\r",
+                  "let responseText = pm.response.text().trim().toLowerCase();\r",
+                  "\r",
+                  "console.log(\"Response:\", responseText);\r",
+                  "\r",
+                  "\r",
+                  "pm.test('Status Code | ' + testData.testCaseId, function () {\r",
+                  "    pm.expect(pm.response.code).to.eql(Number(testData.expectedStatusCode));\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "if (testData.expectedstatusline) {\r",
+                  "    pm.test('Status Line | ' + testData.testCaseId, function () {\r",
+                  "        pm.expect(pm.response.status).to.eql(testData.expectedstatusline);\r",
+                  "    });\r",
+                  "}\r",
+                  "\r",
+                  "\r",
+                  "if (testData.scenarioType === \"Negative\") {\r",
+                  "\r",
+                  "   \r",
+                  "      \r",
+                  "    pm.test('Response should indicate content-type issue', function () {\r",
+                  "        pm.expect(responseText)\r",
+                  "          .to.include('content-type');\r",
+                  "    });\r",
+                  "\r",
+                  "    pm.test('Response should suggest application/json', function () {\r",
+                  "        pm.expect(responseText)\r",
+                  "          .to.include('application/json');\r",
+                  "    });\r",
+                  "\r",
+                  "    \r",
+                  "    pm.test('Error message validation', function () {\r",
+                  "        pm.expect(responseText)\r",
+                  "          .to.satisfy(msg =>\r",
+                  "              msg.includes('not supported') ||\r",
+                  "              msg.includes('invalid') ||\r",
+                  "              msg.includes('unsupported')\r",
+                  "          );\r",
+                  "    });\r",
+                  "\r",
+                  "  \r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "let testData = pm.iterationData.toObject();\r",
+                  "\r",
+                  "if (testData.Operation !== 'PostConfirmwrongcontenttype') {\r",
+                  "    pm.execution.skipRequest();\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"userLoginEmailId\": \"{{userLoginEmailId}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/{{endPoint}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "{{endPoint}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reset Password",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const testData = pm.iterationData.toObject();\r",
+                  "\r",
+                  "\r",
+                  "let response = {};\r",
+                  "let isJson = true;\r",
+                  "\r",
+                  "try {\r",
+                  "    response = pm.response.json();\r",
+                  "} catch (e) {\r",
+                  "    isJson = false;\r",
+                  "    console.log(\"Response is not JSON\");\r",
+                  "}\r",
+                  "\r",
+                  "\r",
+                  "console.log('--- Test Result Info ---');\r",
+                  "console.log('Scenario Name :', testData.scenarioName);\r",
+                  "console.log('Scenario Type :', testData.scenarioType);\r",
+                  "console.log('Request Operation :', testData.Operation);\r",
+                  "console.log('Test Case ID :', testData.testCaseId);\r",
+                  "console.log('HTTP Status :', pm.response.code);\r",
+                  "console.log('------------------------');\r",
+                  "\r",
+                  "pm.environment.set(\"updatedPassword\", testData.password);\r",
+                  "\r",
+                  "\r",
+                  "pm.test('Status Code Validation | ' + testData.testCaseId, function () {\r",
+                  "    pm.expect(pm.response.code).to.eql(Number(testData.expectedStatusCode));\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "if (testData.expectedstatusline) {\r",
+                  "    pm.test('Status Line Validation | ' + testData.testCaseId, function () {\r",
+                  "        pm.expect(pm.response.status).to.eql(testData.expectedstatusline);\r",
+                  "    });\r",
+                  "}\r",
+                  "\r",
+                  "\r",
+                  "if (pm.response.code === 200 && isJson) {\r",
+                  "\r",
+                  "    pm.test('Response should have success true', function () {\r",
+                  "        pm.expect(response.success).to.be.true;\r",
+                  "    });\r",
+                  "\r",
+                  "    pm.test('Response message validation', function () {\r",
+                  "        pm.expect(response.message).to.eql('Password saved');\r",
+                  "    });\r",
+                  "\r",
+                  "   \r",
+                  "    const schema = {\r",
+                  "        type: 'object',\r",
+                  "        required: ['message', 'success'],\r",
+                  "        properties: {\r",
+                  "            message: { type: 'string' },\r",
+                  "            success: { type: 'boolean' }\r",
+                  "        }\r",
+                  "    };\r",
+                  "\r",
+                  "    pm.test('Schema Validation | ' + testData.testCaseId, function () {\r",
+                  "        pm.response.to.have.jsonSchema(schema);\r",
+                  "    });\r",
+                  "}\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "let testData = pm.iterationData.toObject();\r",
+                  "\r",
+                  "if (testData.Operation !== 'PostResetPassword') {\r",
+                  "    pm.execution.skipRequest();\r",
+                  "}\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"userLoginEmailId\": \"{{userLoginEmailId}}\",\r\n\"password\": \"{{password}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/{{endPoint}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "{{endPoint}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login after Reset",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const testData = pm.iterationData.toObject();\r",
+                  "\r",
+                  "\r",
+                  "let response = {};\r",
+                  "let isJson = true;\r",
+                  "\r",
+                  "try {\r",
+                  "    response = pm.response.json();\r",
+                  "} catch (e) {\r",
+                  "    isJson = false;\r",
+                  "    console.log(\"Response is not JSON\");\r",
+                  "}\r",
+                  "\r",
+                  "\r",
+                  "console.log('--- Test Result Info ---');\r",
+                  "console.log('Scenario Name :', testData.scenarioName);\r",
+                  "console.log('Scenario Type :',testData.scenarioType);\r",
+                  "console.log('Request Operation  :', testData.Operation);\r",
+                  "console.log('Test Case ID  :', testData.testCaseId);\r",
+                  "console.log('HTTP Status   :', pm.response.code);\r",
+                  "console.log('------------------------');\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  "pm.test('Status Code Validation | ' + testData.testCaseId, function () {\r",
+                  "    pm.expect(pm.response.code).to.eql(Number(testData.expectedStatusCode));\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "if (testData.expectedstatusline) {\r",
+                  "    pm.test('Status Line Validation | ' + testData.testCaseId, function () {\r",
+                  "        pm.expect(pm.response.status).to.eql(testData.expectedstatusline);\r",
+                  "    });\r",
+                  "}\r",
+                  "\r",
+                  "\r",
+                  "if ([200, 201].includes(pm.response.code) && isJson) {\r",
+                  "\r",
+                  "    \r",
+                  "    pm.test('Token Must Exist | ' + testData.testCaseId, function () {\r",
+                  "        pm.expect(response).to.have.property('token');\r",
+                  "    });\r",
+                  "\r",
+                  "    \r",
+                  "    if (response.token) {\r",
+                  "        pm.environment.set('token', response.token);\r",
+                  "        pm.environment.set('tokenType', response.type || 'Bearer');\r",
+                  "    }\r",
+                  "\r",
+                  "    \r",
+                  "    const positiveSchema = {\r",
+                  "        type: 'object',\r",
+                  "        required: ['token', 'type', 'userId', 'email', 'roles', 'status', 'passwordExpired'],\r",
+                  "        properties: {\r",
+                  "            token: { type: 'string' },\r",
+                  "            type: { type: 'string' },\r",
+                  "            userId: { type: 'string' },\r",
+                  "            email: { type: 'string' },\r",
+                  "            roles: {\r",
+                  "                type: 'array',\r",
+                  "                items: { type: 'string' }\r",
+                  "            },\r",
+                  "            status: { type: 'string' },\r",
+                  "            passwordExpired: { type: 'boolean' }\r",
+                  "        }\r",
+                  "    };\r",
+                  "\r",
+                  "    pm.test('Schema Validation | ' + testData.testCaseId, function () {\r",
+                  "        pm.response.to.have.jsonSchema(positiveSchema);\r",
+                  "    });\r",
+                  "\r",
+                  "}\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "let testData = pm.iterationData.toObject();\r",
+                  "\r",
+                  "if (testData.Operation !== 'PostLoginReset') {\r",
+                  "    pm.execution.skipRequest();\r",
+                  "}\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"userLoginEmailId\": \"{{userLoginEmailId}}\",\r\n\"password\": \"{{password}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/{{endPoint}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "{{endPoint}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login empty email",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const testData = pm.iterationData.toObject();\r",
+                  "\r",
+                  "\r",
+                  "let response = {};\r",
+                  "let isJson = true;\r",
+                  "\r",
+                  "try {\r",
+                  "    response = pm.response.json();\r",
+                  "} catch (e) {\r",
+                  "    isJson = false;\r",
+                  "    console.log(\"Response is not JSON\");\r",
+                  "}\r",
+                  "\r",
+                  "console.log(\"FULL RESPONSE:\", response);\r",
+                  "\r",
+                  "\r",
+                  "pm.test('Status Code | ' + testData.testCaseId, function () {\r",
+                  "    pm.expect(pm.response.code).to.eql(Number(testData.expectedStatusCode));\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "if (testData.scenarioType === \"Negative\" && isJson) {\r",
+                  "\r",
+                  "    let keys = Object.keys(response);\r",
+                  "\r",
+                  "    pm.test('Error field should exist', function () {\r",
+                  "        pm.expect(keys.length).to.be.greaterThan(0);\r",
+                  "    });\r",
+                  "\r",
+                  "    let errorMsg = response[keys[0]];\r",
+                  "\r",
+                  "    console.log(\"Error Message:\", errorMsg);\r",
+                  "\r",
+                  "    \r",
+                  "    pm.test('Error message should not be empty', function () {\r",
+                  "        pm.expect(errorMsg).to.not.be.undefined;\r",
+                  "        pm.expect(errorMsg).to.not.be.empty;\r",
+                  "    });\r",
+                  "\r",
+                  "    \r",
+                  "    pm.test('Error message should be valid', function () {\r",
+                  "        pm.expect(errorMsg.toLowerCase())\r",
+                  "          .to.satisfy(msg =>\r",
+                  "              msg.includes('mandatory') ||\r",
+                  "              msg.includes('required') ||\r",
+                  "              msg.includes('must') ||\r",
+                  "              msg.includes('invalid') ||\r",
+                  "              msg.includes('not found') ||\r",
+                  "              msg.includes('exist') ||\r",
+                  "              msg.includes('contain')  \r",
+                  "          );\r",
+                  "    });\r",
+                  "\r",
+                  "   \r",
+                  "    pm.test('Token should NOT exist', function () {\r",
+                  "        pm.expect(response.token).to.be.undefined;\r",
+                  "    });\r",
+                  "\r",
+                  "    \r",
+                  "    const negativeSchema = {\r",
+                  "        type: 'object',\r",
+                  "        additionalProperties: {\r",
+                  "            anyOf: [\r",
+                  "                { type: 'string' },\r",
+                  "                { type: 'boolean' }\r",
+                  "            ]\r",
+                  "        }\r",
+                  "    };\r",
+                  "\r",
+                  "    pm.test('Negative Schema Validation', function () {\r",
+                  "        pm.response.to.have.jsonSchema(negativeSchema);\r",
+                  "    });\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "let testData = pm.iterationData.toObject();\r",
+                  "\r",
+                  "if (testData.Operation !== 'PostLoginNoemail') {\r",
+                  "    pm.execution.skipRequest();\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"userLoginEmailId\": \"{{userLoginEmailId}}\",\r\n\"password\": \"{{password}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/{{endPoint}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "{{endPoint}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login both field empty",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const testData = pm.iterationData.toObject();\r",
+                  "\r",
+                  "\r",
+                  "let response = {};\r",
+                  "let isJson = true;\r",
+                  "\r",
+                  "try {\r",
+                  "    response = pm.response.json();\r",
+                  "} catch (e) {\r",
+                  "    isJson = false;\r",
+                  "    console.log(\"Response is not JSON\");\r",
+                  "}\r",
+                  "\r",
+                  "console.log(\"FULL RESPONSE:\", response);\r",
+                  "\r",
+                  "\r",
+                  "pm.test('Status Code | ' + testData.testCaseId, function () {\r",
+                  "    pm.expect(pm.response.code).to.eql(Number(testData.expectedStatusCode));\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "if (testData.scenarioType === \"Negative\" && isJson) {\r",
+                  "\r",
+                  "    let keys = Object.keys(response);\r",
+                  "\r",
+                  "    pm.test('Error field should exist', function () {\r",
+                  "        pm.expect(keys.length).to.be.greaterThan(0);\r",
+                  "    });\r",
+                  "\r",
+                  "    let errorMsg = response[keys[0]];\r",
+                  "\r",
+                  "    console.log(\"Error Message:\", errorMsg);\r",
+                  "\r",
+                  "    \r",
+                  "    pm.test('Error message should not be empty', function () {\r",
+                  "        pm.expect(errorMsg).to.not.be.undefined;\r",
+                  "        pm.expect(errorMsg).to.not.be.empty;\r",
+                  "    });\r",
+                  "\r",
+                  "    \r",
+                  "    pm.test('Error message should be valid', function () {\r",
+                  "        pm.expect(errorMsg.toLowerCase())\r",
+                  "          .to.satisfy(msg =>\r",
+                  "              msg.includes('mandatory') ||\r",
+                  "              msg.includes('required') ||\r",
+                  "              msg.includes('must') ||\r",
+                  "              msg.includes('invalid') ||\r",
+                  "              msg.includes('not found') ||\r",
+                  "              msg.includes('exist') ||\r",
+                  "              msg.includes('contain')   // 👈 FIX for password rule\r",
+                  "          );\r",
+                  "    });\r",
+                  "\r",
+                  "    \r",
+                  "    pm.test('Token should NOT exist', function () {\r",
+                  "        pm.expect(response.token).to.be.undefined;\r",
+                  "    });\r",
+                  "\r",
+                  "    \r",
+                  "    const negativeSchema = {\r",
+                  "        type: 'object',\r",
+                  "        additionalProperties: {\r",
+                  "            anyOf: [\r",
+                  "                { type: 'string' },\r",
+                  "                { type: 'boolean' }\r",
+                  "            ]\r",
+                  "        }\r",
+                  "    };\r",
+                  "\r",
+                  "    pm.test('Negative Schema Validation', function () {\r",
+                  "        pm.response.to.have.jsonSchema(negativeSchema);\r",
+                  "    });\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "let testData = pm.iterationData.toObject();\r",
+                  "\r",
+                  "if (testData.Operation !== 'PostLoginNoemailpassword') {\r",
+                  "    pm.execution.skipRequest();\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"userLoginEmailId\": \"{{userLoginEmailId}}\",\r\n\"password\": \"{{password}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/{{endPoint}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "{{endPoint}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login empty password",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const testData = pm.iterationData.toObject();\r",
+                  "\r",
+                  "\r",
+                  "let response = {};\r",
+                  "let isJson = true;\r",
+                  "\r",
+                  "try {\r",
+                  "    response = pm.response.json();\r",
+                  "} catch (e) {\r",
+                  "    isJson = false;\r",
+                  "    console.log(\"Response is not JSON\");\r",
+                  "}\r",
+                  "\r",
+                  "console.log(\"FULL RESPONSE:\", response);\r",
+                  "\r",
+                  "\r",
+                  "pm.test('Status Code | ' + testData.testCaseId, function () {\r",
+                  "    pm.expect(pm.response.code).to.eql(Number(testData.expectedStatusCode));\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "if (testData.scenarioType === \"Negative\" && isJson) {\r",
+                  "\r",
+                  "    let keys = Object.keys(response);\r",
+                  "\r",
+                  "    pm.test('Error field should exist', function () {\r",
+                  "        pm.expect(keys.length).to.be.greaterThan(0);\r",
+                  "    });\r",
+                  "\r",
+                  "    let errorMsg = response[keys[0]];\r",
+                  "\r",
+                  "    console.log(\"Error Message:\", errorMsg);\r",
+                  "\r",
+                  "    \r",
+                  "    pm.test('Error message should not be empty', function () {\r",
+                  "        pm.expect(errorMsg).to.not.be.undefined;\r",
+                  "        pm.expect(errorMsg).to.not.be.empty;\r",
+                  "    });\r",
+                  "\r",
+                  "    \r",
+                  "    pm.test('Error message should be valid', function () {\r",
+                  "        pm.expect(errorMsg.toLowerCase())\r",
+                  "          .to.satisfy(msg =>\r",
+                  "              msg.includes('mandatory') ||\r",
+                  "              msg.includes('required') ||\r",
+                  "              msg.includes('must') ||\r",
+                  "              msg.includes('invalid') ||\r",
+                  "              msg.includes('not found') ||\r",
+                  "              msg.includes('exist') ||\r",
+                  "              msg.includes('contain')   // 👈 FIX for password rule\r",
+                  "          );\r",
+                  "    });\r",
+                  "\r",
+                  "    \r",
+                  "    pm.test('Token should NOT exist', function () {\r",
+                  "        pm.expect(response.token).to.be.undefined;\r",
+                  "    });\r",
+                  "\r",
+                  "    \r",
+                  "    const negativeSchema = {\r",
+                  "        type: 'object',\r",
+                  "        additionalProperties: {\r",
+                  "            anyOf: [\r",
+                  "                { type: 'string' },\r",
+                  "                { type: 'boolean' }\r",
+                  "            ]\r",
+                  "        }\r",
+                  "    };\r",
+                  "\r",
+                  "    pm.test('Negative Schema Validation', function () {\r",
+                  "        pm.response.to.have.jsonSchema(negativeSchema);\r",
+                  "    });\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "let testData = pm.iterationData.toObject();\r",
+                  "\r",
+                  "if (testData.Operation !== 'PostLoginNopassword') {\r",
+                  "    pm.execution.skipRequest();\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"userLoginEmailId\": \"{{userLoginEmailId}}\",\r\n\"password\": \"{{password}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/{{endPoint}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "{{endPoint}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login invalid email",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const testData = pm.iterationData.toObject();\r",
+                  "\r",
+                  "\r",
+                  "let response = {};\r",
+                  "let isJson = true;\r",
+                  "\r",
+                  "try {\r",
+                  "    response = pm.response.json();\r",
+                  "} catch (e) {\r",
+                  "    isJson = false;\r",
+                  "    console.log(\"Response is not JSON\");\r",
+                  "}\r",
+                  "\r",
+                  "console.log(\"FULL RESPONSE:\", response);\r",
+                  "\r",
+                  "\r",
+                  "pm.test('Status Code | ' + testData.testCaseId, function () {\r",
+                  "    pm.expect(pm.response.code).to.eql(Number(testData.expectedStatusCode));\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "if (testData.scenarioType === \"Negative\" && isJson) {\r",
+                  "\r",
+                  "    let keys = Object.keys(response);\r",
+                  "\r",
+                  "    pm.test('Error field should exist', function () {\r",
+                  "        pm.expect(keys.length).to.be.greaterThan(0);\r",
+                  "    });\r",
+                  "\r",
+                  "    let errorMsg = response[keys[0]];\r",
+                  "\r",
+                  "    console.log(\"Error Message:\", errorMsg);\r",
+                  "\r",
+                  "    \r",
+                  "    pm.test('Error message should not be empty', function () {\r",
+                  "        pm.expect(errorMsg).to.not.be.undefined;\r",
+                  "        pm.expect(errorMsg).to.not.be.empty;\r",
+                  "    });\r",
+                  "\r",
+                  "    \r",
+                  "    pm.test('Error message should be valid', function () {\r",
+                  "        pm.expect(errorMsg.toLowerCase())\r",
+                  "          .to.satisfy(msg =>\r",
+                  "              msg.includes('mandatory') ||\r",
+                  "              msg.includes('required') ||\r",
+                  "              msg.includes('must') ||\r",
+                  "              msg.includes('invalid') ||\r",
+                  "              msg.includes('not found') ||\r",
+                  "              msg.includes('exist') ||\r",
+                  "              msg.includes('contain')   // 👈 FIX for password rule\r",
+                  "          );\r",
+                  "    });\r",
+                  "\r",
+                  "    \r",
+                  "    pm.test('Token should NOT exist', function () {\r",
+                  "        pm.expect(response.token).to.be.undefined;\r",
+                  "    });\r",
+                  "\r",
+                  "    \r",
+                  "    const negativeSchema = {\r",
+                  "        type: 'object',\r",
+                  "        additionalProperties: {\r",
+                  "            anyOf: [\r",
+                  "                { type: 'string' },\r",
+                  "                { type: 'boolean' }\r",
+                  "            ]\r",
+                  "        }\r",
+                  "    };\r",
+                  "\r",
+                  "    pm.test('Negative Schema Validation', function () {\r",
+                  "        pm.response.to.have.jsonSchema(negativeSchema);\r",
+                  "    });\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "let testData = pm.iterationData.toObject();\r",
+                  "\r",
+                  "if (testData.Operation !== 'PostLoginInvaliemail') {\r",
+                  "    pm.execution.skipRequest();\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"userLoginEmailId\": \"{{userLoginEmailId}}\",\r\n\"password\": \"{{password}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/{{endPoint}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "{{endPoint}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login with wrong endpoint",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const testData = pm.iterationData.toObject();\r",
+                  "\r",
+                  "\r",
+                  "let responseText = pm.response.text().trim().toLowerCase();\r",
+                  "\r",
+                  "console.log(\"Response:\", responseText);\r",
+                  "\r",
+                  "\r",
+                  "pm.test('Status Code | ' + testData.testCaseId, function () {\r",
+                  "    pm.expect(pm.response.code).to.eql(Number(testData.expectedStatusCode));\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "if (testData.expectedstatusline) {\r",
+                  "    pm.test('Status Line | ' + testData.testCaseId, function () {\r",
+                  "        pm.expect(pm.response.status).to.eql(testData.expectedstatusline);\r",
+                  "    });\r",
+                  "}\r",
+                  "\r",
+                  "\r",
+                  "if (testData.scenarioType === \"Negative\") {\r",
+                  "\r",
+                  "   \r",
+                  "    pm.test('Response should indicate invalid endpoint', function () {\r",
+                  "        pm.expect(responseText)\r",
+                  "          .to.include('invalid');\r",
+                  "    });\r",
+                  "\r",
+                  "   \r",
+                  "    pm.test('Error message validation', function () {\r",
+                  "        pm.expect(responseText)\r",
+                  "          .to.satisfy(msg =>\r",
+                  "              msg.includes('invalid') ||\r",
+                  "              msg.includes('not found') ||\r",
+                  "              msg.includes('error')\r",
+                  "          );\r",
+                  "    });\r",
+                  "\r",
+                  "  \r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "let testData = pm.iterationData.toObject();\r",
+                  "\r",
+                  "if (testData.Operation !== 'PostLoginwrongendpoint') {\r",
+                  "    pm.execution.skipRequest();\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"userLoginEmailId\": \"{{userLoginEmailId}}\",\r\n\"password\": \"{{password}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/{{endPoint}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "{{endPoint}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login wrong content type",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const testData = pm.iterationData.toObject();\r",
+                  "\r",
+                  "\r",
+                  "let responseText = pm.response.text().trim().toLowerCase();\r",
+                  "\r",
+                  "console.log(\"Response:\", responseText);\r",
+                  "\r",
+                  "\r",
+                  "pm.test('Status Code | ' + testData.testCaseId, function () {\r",
+                  "    pm.expect(pm.response.code).to.eql(Number(testData.expectedStatusCode));\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "if (testData.expectedstatusline) {\r",
+                  "    pm.test('Status Line | ' + testData.testCaseId, function () {\r",
+                  "        pm.expect(pm.response.status).to.eql(testData.expectedstatusline);\r",
+                  "    });\r",
+                  "}\r",
+                  "\r",
+                  "\r",
+                  "if (testData.scenarioType === \"Negative\") {\r",
+                  "\r",
+                  "   \r",
+                  "      \r",
+                  "    pm.test('Response should indicate content-type issue', function () {\r",
+                  "        pm.expect(responseText)\r",
+                  "          .to.include('content-type');\r",
+                  "    });\r",
+                  "\r",
+                  "    pm.test('Response should suggest application/json', function () {\r",
+                  "        pm.expect(responseText)\r",
+                  "          .to.include('application/json');\r",
+                  "    });\r",
+                  "\r",
+                  "    \r",
+                  "    pm.test('Error message validation', function () {\r",
+                  "        pm.expect(responseText)\r",
+                  "          .to.satisfy(msg =>\r",
+                  "              msg.includes('not supported') ||\r",
+                  "              msg.includes('invalid') ||\r",
+                  "              msg.includes('unsupported')\r",
+                  "          );\r",
+                  "    });\r",
+                  "\r",
+                  "  \r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "let testData = pm.iterationData.toObject();\r",
+                  "\r",
+                  "if (testData.Operation !== 'PostLoginwrongcontenttype') {\r",
+                  "    pm.execution.skipRequest();\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"userLoginEmailId\": \"{{userLoginEmailId}}\",\r\n\"password\": \"{{password}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/{{endPoint}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "{{endPoint}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "logout wrong endpoint",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const testData = pm.iterationData.toObject();\r",
+                  "\r",
+                  "\r",
+                  "let responseText = pm.response.text().trim().toLowerCase();\r",
+                  "\r",
+                  "console.log(\"Response:\", responseText);\r",
+                  "\r",
+                  "\r",
+                  "pm.test('Status Code | ' + testData.testCaseId, function () {\r",
+                  "    pm.expect(pm.response.code).to.eql(Number(testData.expectedStatusCode));\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "if (testData.expectedstatusline) {\r",
+                  "    pm.test('Status Line | ' + testData.testCaseId, function () {\r",
+                  "        pm.expect(pm.response.status).to.eql(testData.expectedstatusline);\r",
+                  "    });\r",
+                  "}\r",
+                  "\r",
+                  "\r",
+                  "if (testData.scenarioType === \"Negative\") {\r",
+                  "\r",
+                  "   \r",
+                  "    pm.test('Response should indicate invalid endpoint', function () {\r",
+                  "        pm.expect(responseText)\r",
+                  "          .to.include('invalid');\r",
+                  "    });\r",
+                  "\r",
+                  "   \r",
+                  "    pm.test('Error message validation', function () {\r",
+                  "        pm.expect(responseText)\r",
+                  "          .to.satisfy(msg =>\r",
+                  "              msg.includes('invalid') ||\r",
+                  "              msg.includes('not found') ||\r",
+                  "              msg.includes('error')\r",
+                  "          );\r",
+                  "    });\r",
+                  "\r",
+                  "  \r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const testData = pm.iterationData.toObject();\r",
+                  "\r",
+                  "if (testData.scenarioType !== \"Negative\" || testData.Operation !== \"Getlogoutlmsw\") {\r",
+                  "    return pm.execution.skipRequest();\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/{{endPoint}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "{{endPoint}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "logout without token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const testData = pm.iterationData.toObject();\r",
+                  "\r",
+                  "\r",
+                  "let responseText = pm.response.text();\r",
+                  "\r",
+                  "\r",
+                  "console.log('--- Test Result Info ---');\r",
+                  "console.log('Scenario Name :', testData.scenarioName);\r",
+                  "console.log('Scenario Type :', testData.scenarioType);\r",
+                  "console.log('Operation     :', testData.Operation);\r",
+                  "console.log('Test Case ID  :', testData.testCaseId);\r",
+                  "console.log('HTTP Status   :', pm.response.code);\r",
+                  "console.log('Response Body :', responseText);\r",
+                  "console.log('------------------------');\r",
+                  "\r",
+                  "\r",
+                  "pm.test('Status Code Validation | ' + testData.testCaseId, function () {\r",
+                  "    pm.expect(pm.response.code).to.eql(Number(testData.expectedStatusCode));\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "if (testData.expectedstatusline) {\r",
+                  "    pm.test('Status Line Validation | ' + testData.testCaseId, function () {\r",
+                  "        pm.expect(pm.response.status).to.eql(testData.expectedstatusline);\r",
+                  "    });\r",
+                  "}\r",
+                  "\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "let testData = pm.iterationData.toObject();\r",
+                  "\r",
+                  "if (testData.Operation !== 'GetlogoutlmsNotoken') {\r",
+                  "    pm.execution.skipRequest();\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/{{endPoint}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "{{endPoint}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "logout",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const testData = pm.iterationData.toObject();\r",
+                  "\r",
+                  "\r",
+                  "let responseText = pm.response.text();\r",
+                  "\r",
+                  "console.log('--- Test Result Info ---');\r",
+                  "console.log('Scenario Name :', testData.scenarioName);\r",
+                  "console.log('Scenario Type :', testData.scenarioType);\r",
+                  "console.log('Operation     :', testData.Operation);\r",
+                  "console.log('Test Case ID  :', testData.testCaseId);\r",
+                  "console.log('HTTP Status   :', pm.response.code);\r",
+                  "console.log('Response Body :', responseText);\r",
+                  "console.log('------------------------');\r",
+                  "\r",
+                  "\r",
+                  "pm.test('Status Code Validation | ' + testData.testCaseId, function () {\r",
+                  "    pm.expect(pm.response.code).to.eql(Number(testData.expectedStatusCode));\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "if (testData.expectedstatusline) {\r",
+                  "    pm.test('Status Line Validation | ' + testData.testCaseId, function () {\r",
+                  "        pm.expect(pm.response.status).to.eql(testData.expectedstatusline);\r",
+                  "    });\r",
+                  "}\r",
+                  "\r",
+                  "\r",
+                  "pm.test('Response is plain text', function () {\r",
+                  "    pm.expect(responseText).to.be.a('string');\r",
+                  "});\r",
+                  "\r",
+                  "if (testData.scenarioType === \"Positive\") {\r",
+                  "    pm.test('Logout message validation', function () {\r",
+                  "        pm.expect(responseText.trim()).to.eql(\"Logout successful\");\r",
+                  "    });\r",
+                  "}\r",
+                  "\r",
+                  " \r",
+                  "pm.test('Logout message validation', function () {\r",
+                  "    pm.expect(responseText.trim()).to.eql(\"Logout successful\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "let testData = pm.iterationData.toObject();\r",
+                  "\r",
+                  "if (testData.Operation !== 'Getlogoutlms') {\r",
+                  "    pm.execution.skipRequest();\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/{{endPoint}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "{{endPoint}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "jwt",
+    "jwt": [
+      {
+        "key": "algorithm",
+        "value": "HS256",
+        "type": "string"
+      },
+      {
+        "key": "isSecretBase64Encoded",
+        "value": false,
+        "type": "boolean"
+      },
+      {
+        "key": "payload",
+        "value": "{}",
+        "type": "string"
+      },
+      {
+        "key": "addTokenTo",
+        "value": "header",
+        "type": "string"
+      },
+      {
+        "key": "headerPrefix",
+        "value": "Bearer",
+        "type": "string"
+      },
+      {
+        "key": "queryParamKey",
+        "value": "token",
+        "type": "string"
+      },
+      {
+        "key": "header",
+        "value": "{}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "programId",
+      "value": ""
+    }
+  ]
+}
